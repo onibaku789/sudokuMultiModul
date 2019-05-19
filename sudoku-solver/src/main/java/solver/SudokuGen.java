@@ -163,7 +163,7 @@ public class SudokuGen {
      * Clears the sudoku grid and fills the available numbers for every cell
      */
     private void clearGrid() {
-        /**
+        /*
          * For further singelton design
          */
         available.clear();

@@ -12,6 +12,7 @@
     <artifactId>sudoku-client</artifactId>
     <packaging>jar</packaging>
 
+
     <dependencies>
         <dependency>
             <groupId>hu.unideb.inf</groupId>
@@ -94,6 +95,34 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build><plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+                <execution>
+
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <transformers>
+                            <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <manifestEntries>
+                                    <Main-Class>client.SudokuState</Main-Class>
+                                </manifestEntries>
+                            </transformer>
+                        </transformers>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+    </build>
 
     <distributionManagement>
         <site>
