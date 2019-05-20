@@ -23,8 +23,9 @@ public class SudokuState implements Cloneable {
     private static Logger logger = LoggerFactory.getLogger( SudokuState.class );
     ZonedDateTime start, stop;
     boolean wantsToQuit = false;
-    public int row , col , number;
+    private int row , col , number;
     private SudokuGen sudokuGen = new SudokuGen();
+
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector( new PersistenceModule( "game" ) );
@@ -38,7 +39,7 @@ public class SudokuState implements Cloneable {
         System.out.println( "Type in your name!" );
 
         name = in.nextLine();
-        logger.info( "Inserteted name: {}", name );
+        logger.info( "Inserted name: {}", name );
 
 
         while (true) {
@@ -174,7 +175,7 @@ public class SudokuState implements Cloneable {
             }
             if(wantsToQuit)
                 break;
-
+            if(validInput( row-1,col-1,number )){
             try {
 
                 sudokuGen.writeToSudokuGrid( row - 1, col - 1, number );
@@ -182,6 +183,7 @@ public class SudokuState implements Cloneable {
                 logger.error( "Cannot write to SudokuGrid. Exception: {}", e.getMessage() );
                 System.out.println( e.getMessage() );
 
+            }
             }
 
         }
@@ -214,6 +216,11 @@ public class SudokuState implements Cloneable {
         return true;
     }
 
+    /**
+     * Parse the user input into row,column,number
+     * @param input user input line
+     */
+
     private void parseInput(String input) {
         if(input.contains( "quit" )){
             wantsToQuit = true;
@@ -231,6 +238,41 @@ public class SudokuState implements Cloneable {
             }
         }
 
+    }
+
+
+    /**
+     * Checks if the entered cell and value are in range.
+     *
+     * @param row    the row where the player wants to add the {@code number}
+     * @param col    the column where the player wants to add the {@code number}
+     * @param number the value that the player wants to add
+     * @return returns {@code true} if there is no conflict ,returns {@code false} if there is  conflict
+     */
+    private boolean validInput(int row, int col, int number) {
+        return isValidCell( row, col ) && isValidValue( number );
+    }
+
+    /**
+     * Checks if the entered cell is in range.
+     *
+     * @param row the row where the player wants to add the number
+     * @param col the column where the player wants to add the number
+     * @return returns {@code true} if it is  in  range ,returns {@code false} if it is  not in range
+     */
+
+    private boolean isValidCell(int row, int col) {
+        return row > -1 && row < 9 && col > -1 && col < 9;
+    }
+
+    /**
+     * Checks if the entered {@code number} is in range
+     *
+     * @param number the value that the player wants to add
+     * @return returns {@code true} if it is  in  range ,returns {@code false} if it is not in range
+     */
+   private boolean isValidValue(int number) {
+        return !(number > 9 || 0 >= number);
     }
 
 
