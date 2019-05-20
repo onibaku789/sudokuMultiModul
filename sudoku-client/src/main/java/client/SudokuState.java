@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class SudokuState implements Cloneable {
     private static Logger logger = LoggerFactory.getLogger( SudokuState.class );
     ZonedDateTime start, stop;
-
+    boolean wantsToQuit = false;
     public int row , col , number;
     private SudokuGen sudokuGen = new SudokuGen();
 
@@ -141,6 +141,7 @@ public class SudokuState implements Cloneable {
         printDiffSelect();
         while (true) {
             menuItem = in.nextLine();
+
             if (menuItem.equals( "0" )) {
                 sudokuGen.initBoard( Difficulty.EASY );
                 break;
@@ -171,6 +172,8 @@ public class SudokuState implements Cloneable {
             } catch (Exception e) {
                 System.out.println( e.getMessage() );
             }
+            if(wantsToQuit)
+                break;
 
             try {
 
@@ -182,9 +185,11 @@ public class SudokuState implements Cloneable {
             }
 
         }
-
         stop = ZonedDateTime.now();
-        System.out.println( "You won" );
+        if (sudokuGen.isEnd() && !wantsToQuit) {
+            System.out.println( "You won" );
+        }
+
 
     }
 
@@ -210,22 +215,25 @@ public class SudokuState implements Cloneable {
     }
 
     private void parseInput(String input) {
+        if(input.contains( "quit" )){
+            wantsToQuit = true;
+        }else {
 
-        String[] inputArray = input.split( "\\s+" );
+            String[] inputArray = input.split( "\\s+" );
 
-        if (inputArray.length == 3) {
-            this.row = Integer.parseInt( inputArray[0] );
-            this.col = Integer.parseInt( inputArray[1] );
-            this.number = Integer.parseInt( inputArray[2] );
-        } else {
-            throw new IllegalArgumentException( "Invalid input" );
+
+            if (inputArray.length == 3) {
+                this.row = Integer.parseInt( inputArray[0] );
+                this.col = Integer.parseInt( inputArray[1] );
+                this.number = Integer.parseInt( inputArray[2] );
+            } else {
+                throw new IllegalArgumentException( "Invalid input" );
+            }
         }
 
-
     }
 
-    private boolean operatorsAreSet() {
-        return isInteger( this.col ) && isInteger( this.row ) && isInteger( this.number );
-    }
+
+
 
 }
