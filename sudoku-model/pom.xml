@@ -105,12 +105,7 @@
 
     </dependencies>
 
-    <distributionManagement>
-        <site>
-            <id>fake</id>
-            <url>file:///tmp/fake.com/</url>
-        </site>
-    </distributionManagement>
+
 
 
 </project>

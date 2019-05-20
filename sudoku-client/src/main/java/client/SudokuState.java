@@ -2,20 +2,16 @@ package client;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
+import guice.PersistenceModule;
 import model.GameResult;
 import model.GameResultDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 import solver.Difficulty;
 import solver.SudokuGen;
-import guice.PersistenceModule;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,7 +21,9 @@ import java.util.Scanner;
  */
 public class SudokuState implements Cloneable {
     private static Logger logger = LoggerFactory.getLogger( SudokuState.class );
-     ZonedDateTime start, stop;
+    ZonedDateTime start, stop;
+
+    public int row , col , number;
     private SudokuGen sudokuGen = new SudokuGen();
 
     public static void main(String[] args) {
@@ -80,15 +78,16 @@ public class SudokuState implements Cloneable {
     }
 
 
-
-
-
-
-
     private void printMenu() {
         System.out.println( "Play: play" );
         System.out.println( "Tops: top" );
         System.out.println( "Exit: exit" );
+    }
+    private void printDiffSelect(){
+        System.out.println( "Select a diffculty!(0-2)" );
+        System.out.println( "Easy" );
+        System.out.println( "Medium" );
+        System.out.println( "Hard" );
     }
 
     /**
@@ -123,7 +122,7 @@ public class SudokuState implements Cloneable {
             sb.append( "Empty :(" );
         } else {
             for (var element : best) {
-                sb.append( " \t"+element.getDifficulty() + "\t\t" + element.getDuration().getSeconds() + "s \t\t" + element.getPlayer() + "\n" );
+                sb.append( " \t" + element.getDifficulty() + "\t\t" + element.getDuration().getSeconds() + "s \t\t" + element.getPlayer() + "\n" );
             }
 
         }
@@ -132,94 +131,101 @@ public class SudokuState implements Cloneable {
 
     private void play() {
         logger.info( "START GAME" );
-        int row = -1, col = -1, number = -1;
 
-        int menuItem = -1;
-        System.out.println( "Select a diffculty!(0-2)" );
-        System.out.println( "Easy" );
-        System.out.println( "Medium" );
-        System.out.println( "Hard" );
+
+        String menuItem;
+
         start = ZonedDateTime.now();
         Scanner in = new Scanner( System.in );
-        if (in.hasNextLine()) {
 
-            menuItem = in.nextInt();
-        }
-
-        switch (menuItem) {
-            case 0:
+        printDiffSelect();
+        while (true) {
+            menuItem = in.nextLine();
+            if (menuItem.equals( "0" )) {
                 sudokuGen.initBoard( Difficulty.EASY );
-
                 break;
-            case 1:
+            } else if (menuItem.equals( "1" )) {
                 sudokuGen.initBoard( Difficulty.MEDIUM );
                 break;
-            case 2:
+            } else if (menuItem.equals( "2" )) {
                 sudokuGen.initBoard( Difficulty.HARD );
                 break;
-            default:
+            } else {
                 logger.error( "Invalid difficulty: {}", menuItem );
-                throw new IllegalArgumentException( "Invalid difficulty" );
-
+                System.out.println("Invalid input, try again.");
+             printDiffSelect();
+            }
 
         }
 
-        sudokuGen.initBoard(Difficulty.TEST);
+        sudokuGen.initBoard( Difficulty.TEST3 );
 
 
-
-        while (!sudokuGen.isEnd() ) {
+        while (!sudokuGen.isEnd()) {
             System.out.println( sudokuGen );
             System.out.println( "Enter the row, column and the number you want to add " );
-            if (in.hasNextLine()) {
 
-                String temp = ""+in.nextInt();
-                if(isInteger( temp ))
-                    row = Integer.parseInt(temp);
-                temp = ""+in.nextInt();
-                if(isInteger( temp ))
-                    col = Integer.parseInt(temp);
-                temp = ""+in.nextInt();
-                if(isInteger( temp ))
-                    number = Integer.parseInt(temp);
 
-                try {
-
-                    sudokuGen.writeToSudokuGrid( row - 1, col - 1, number );
-                } catch (Exception e) {
-                    logger.error( "Cannot write to SudokuGrid. Exception: {}", e.getMessage() );
-                    System.out.println( e.getMessage() );
-
-                }
-
-            } else {
-                logger.error( "Nice try! :)" );
+            try {
+                parseInput( in.nextLine() );
+            } catch (Exception e) {
+                System.out.println( e.getMessage() );
             }
+
+            try {
+
+                sudokuGen.writeToSudokuGrid( row - 1, col - 1, number );
+            } catch (Exception e) {
+                logger.error( "Cannot write to SudokuGrid. Exception: {}", e.getMessage() );
+                System.out.println( e.getMessage() );
+
+            }
+
         }
+
         stop = ZonedDateTime.now();
-        System.out.println( "You won");
+        System.out.println( "You won" );
 
     }
 
     /**
      * Check if the {@code object} param is a {@code Integer}
+     *
      * @param object the user input
      * @return returns {@code true} if {@code object} is Integer,returns {@code false} {@code object} is not Integer
      */
-    private static boolean isInteger(Object object){
-        if(object instanceof Integer){
+    private static boolean isInteger(Object object) {
+        if (object instanceof Integer) {
             return true;
 
-        }else {
+        } else {
             String string = object.toString();
-            try{
+            try {
                 Integer.parseInt( string );
-            }catch (Exception e){
+            } catch (Exception e) {
                 return false;
             }
         }
         return true;
     }
 
+    private void parseInput(String input) {
+
+        String[] inputArray = input.split( "\\s+" );
+
+        if (inputArray.length == 3) {
+            this.row = Integer.parseInt( inputArray[0] );
+            this.col = Integer.parseInt( inputArray[1] );
+            this.number = Integer.parseInt( inputArray[2] );
+        } else {
+            throw new IllegalArgumentException( "Invalid input" );
+        }
+
+
+    }
+
+    private boolean operatorsAreSet() {
+        return isInteger( this.col ) && isInteger( this.row ) && isInteger( this.number );
+    }
 
 }

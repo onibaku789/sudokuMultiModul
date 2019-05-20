@@ -145,6 +145,7 @@
                         <artifactId>checkstyle</artifactId>
                         <version>8.19</version>
                     </dependency>
+
                 </dependencies>
             </plugin>
 
