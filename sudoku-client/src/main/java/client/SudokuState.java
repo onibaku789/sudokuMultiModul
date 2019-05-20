@@ -164,7 +164,7 @@ public class SudokuState implements Cloneable {
 
         while (!sudokuGen.isEnd()) {
             System.out.println( sudokuGen );
-            System.out.println( "Enter the row, column and the number you want to add " );
+            System.out.println( "Enter the row, column and the number you want to add or enter quit to return to the main menu " );
 
 
             try {
