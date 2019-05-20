@@ -11,6 +11,17 @@
 
     <artifactId>sudoku-solver</artifactId>
 
+
+<name>Sudoku puzzle generator</name>
+<description>Sudoku puzzle generator implemented in Java.</description>
+<developers>
+<developer>
+    <id>nar</id>
+    <name>Attila Varga</name>
+    <email>varga.attila798@gmail.com</email>
+</developer>
+</developers>
+
     <dependencies>
 
         <dependency>

@@ -13,6 +13,17 @@
     <packaging>jar</packaging>
 
 
+<name>Sudoku command-line client </name>
+<description>Sudoku command-line client implemented in Java.</description>
+<developers>
+<developer>
+    <id>nar</id>
+    <name>Attila Varga</name>
+    <email>varga.attila798@gmail.com</email>
+</developer>
+</developers>
+
+
     <dependencies>
         <dependency>
             <groupId>hu.unideb.inf</groupId>
