@@ -375,9 +375,9 @@ public class SudokuGen {
             }
             sb.append( "\n" ).append( (i + 1) % 3 == 0 ? "  - - - - - - - - - - - - -\n" : "" );
         }
-        sb.append( "\t" );
+        sb.append( "    " );
         for (int i = 1; i < 10; i++) {
-            sb.append( i ).append( i % 3 == 0 ? "\t" : " " );
+            sb.append( i ).append( i % 3 == 0 ? "   " : " " );
         }
         sb.append( "\n" );
 

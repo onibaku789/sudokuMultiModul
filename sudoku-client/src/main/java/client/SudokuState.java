@@ -21,9 +21,9 @@ import java.util.Scanner;
  */
 public class SudokuState implements Cloneable {
     private static Logger logger = LoggerFactory.getLogger( SudokuState.class );
-    ZonedDateTime start, stop;
-    boolean wantsToQuit = false;
-    private int row , col , number;
+    private ZonedDateTime start, stop;
+    private boolean wantsToQuit ;
+    private int row, col, number;
     private SudokuGen sudokuGen = new SudokuGen();
 
 
@@ -84,8 +84,9 @@ public class SudokuState implements Cloneable {
         System.out.println( "Tops: top" );
         System.out.println( "Exit: exit" );
     }
-    private void printDiffSelect(){
-        System.out.println( "Select a diffculty!(0-2)" );
+
+    private void printDiffSelect() {
+        System.out.println( "Select a difficulty!(0-2)" );
         System.out.println( "Easy" );
         System.out.println( "Medium" );
         System.out.println( "Hard" );
@@ -123,7 +124,7 @@ public class SudokuState implements Cloneable {
             sb.append( "Empty :(" );
         } else {
             for (var element : best) {
-                sb.append( " \t" + element.getDifficulty() + "\t\t" + element.getDuration().getSeconds() + "s \t\t" + element.getPlayer() + "\n" );
+                sb.append( " " + element.getDifficulty() + "\t\t" + element.getDuration().getSeconds() + "s \t\t" + element.getPlayer() + "\n" );
             }
 
         }
@@ -132,6 +133,7 @@ public class SudokuState implements Cloneable {
 
     private void play() {
         logger.info( "START GAME" );
+        wantsToQuit = false;
 
 
         String menuItem;
@@ -154,8 +156,8 @@ public class SudokuState implements Cloneable {
                 break;
             } else {
                 logger.error( "Invalid difficulty: {}", menuItem );
-                System.out.println("Invalid input, try again.");
-             printDiffSelect();
+                System.out.println( "Invalid input, try again." );
+                printDiffSelect();
             }
 
         }
@@ -164,6 +166,7 @@ public class SudokuState implements Cloneable {
 
 
         while (!sudokuGen.isEnd()) {
+
             System.out.println( sudokuGen );
             System.out.println( "Enter the row, column and the number you want to add or enter quit to return to the main menu " );
 
@@ -173,17 +176,17 @@ public class SudokuState implements Cloneable {
             } catch (Exception e) {
                 System.out.println( e.getMessage() );
             }
-            if(wantsToQuit)
+            if (wantsToQuit)
                 break;
-            if(validInput( row-1,col-1,number )){
-            try {
+            if (validInput( row - 1, col - 1, number )) {
+                try {
 
-                sudokuGen.writeToSudokuGrid( row - 1, col - 1, number );
-            } catch (Exception e) {
-                logger.error( "Cannot write to SudokuGrid. Exception: {}", e.getMessage() );
-                System.out.println( e.getMessage() );
+                    sudokuGen.writeToSudokuGrid( row - 1, col - 1, number );
+                } catch (Exception e) {
+                    logger.error( "Cannot write to SudokuGrid. Exception: {}", e.getMessage() );
+                    System.out.println( e.getMessage() );
 
-            }
+                }
             }
 
         }
@@ -218,13 +221,14 @@ public class SudokuState implements Cloneable {
 
     /**
      * Parse the user input into row,column,number
+     *
      * @param input user input line
      */
 
     private void parseInput(String input) {
-        if(input.contains( "quit" )){
+        if (input.contains( "quit" )) {
             wantsToQuit = true;
-        }else {
+        } else {
 
             String[] inputArray = input.split( "\\s+" );
 
@@ -271,11 +275,16 @@ public class SudokuState implements Cloneable {
      * @param number the value that the player wants to add
      * @return returns {@code true} if it is  in  range ,returns {@code false} if it is not in range
      */
-   private boolean isValidValue(int number) {
+    private boolean isValidValue(int number) {
         return !(number > 9 || 0 >= number);
     }
 
-
-
-
+    /**
+     * Prints 10 empty rows.
+     */
+    private void clearConsole() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println( " " );
+        }
+    }
 }

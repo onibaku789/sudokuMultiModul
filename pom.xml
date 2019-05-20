@@ -182,7 +182,7 @@
         </plugins>
         </pluginManagement>
 
-       <!-- <resources>
+     <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -190,7 +190,7 @@
         </resources>
         <filters>
             <filter>db.properties</filter>
-        </filters>-->
+        </filters>
 
     </build>
 

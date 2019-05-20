@@ -3,7 +3,7 @@ package solver;
 /**
  * Represents a cell of a sudoku grid.
  */
-public enum Cell {
+ enum Cell {
     EMPTY,
     ONE,
     TWO,
@@ -42,7 +42,7 @@ public enum Cell {
     }
 
 
-    boolean isMoveable = false;
+    private boolean isMoveable = false;
 
     public String toString() {
         return Integer.toString(ordinal());
