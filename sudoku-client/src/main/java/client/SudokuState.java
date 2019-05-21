@@ -156,7 +156,7 @@ public class SudokuState implements Cloneable {
                 break;
             } else {
                 logger.error( "Invalid difficulty: {}", menuItem );
-                System.out.println( "Invalid input, try again." );
+                System.out.println( "Invalid difficulty, try again." );
                 printDiffSelect();
             }
 
@@ -193,6 +193,7 @@ public class SudokuState implements Cloneable {
         stop = ZonedDateTime.now();
         if (sudokuGen.isEnd() && !wantsToQuit) {
             System.out.println( "You won" );
+            System.out.println(sudokuGen);
         }
 
 
